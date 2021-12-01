@@ -12,8 +12,10 @@ using Newtonsoft.Json;
 
 namespace VVK
 {
+    
     public partial class Form3 : Form
     {
+        string url = "https://mdsedov.com";
         public Form3()
         {
             InitializeComponent();
@@ -36,7 +38,7 @@ namespace VVK
 
           
 
-            var response = await client.PostAsync("http://localhost:8000/api-token-auth/", content);
+            var response = await client.PostAsync(url+"/api-token-auth/", content);
 
             var responseString = await response.Content.ReadAsStringAsync();
 
@@ -60,7 +62,7 @@ namespace VVK
                 Console.WriteLine(jsonDe.token);
                 Console.WriteLine(jsonDe.user_id);
                 Console.WriteLine(jsonDe.email);
-                main.startTest();
+                main.startLaba(comboBox2.Text);
                 this.Hide();
             }
         }

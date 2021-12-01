@@ -17,11 +17,13 @@ namespace VVK
 
     public partial class Form1 : Form
     {
+        string url = "https://mdsedov.com";
         public string user_token;
         public string user_id;
         public string test_id;
-        int[] question_id = new int[10] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        int[] question_id = new int[15] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0 ,0 };
         dynamic[] question;
+        dynamic[] questionMain;
         int questionNum = 0;
         int questionKol = 1;
         int[] id_variant;
@@ -373,19 +375,20 @@ namespace VVK
         }
 
         private static readonly HttpClient client = new HttpClient();
-        public async void startTest()
+        public async void startTest(string lab_num)
         {
             var values = new Dictionary<string, string>
                 {
                     { "user_id", user_id },
-                  
+                     { "lab_number", lab_num },
+
                 };
 
             var content = new FormUrlEncodedContent(values);
 
 
 
-            var response = await client.PostAsync("http://localhost:8000/start_test/", content);
+            var response = await client.PostAsync(url+"/start_test/", content);
 
             var responseString = await response.Content.ReadAsStringAsync();
 
@@ -413,247 +416,30 @@ namespace VVK
         {
             InitializeComponent();
         }
-        int qusestionStrNum = 1;
-        string[] questionMain = new string[0];
+        int qusestionStrNum = 0;
+       
         int colParametr;
        string[] anwerMain = new string[0];
-        void scenarioLab7() {
-           string dopStr = "";
-            switch (mainQuestionNum)
-            {
-                case 1:
-                    createSchemeWindowMain(questionMain[qusestionStrNum], mainQuestionNum);
-                    qusestionStrNum++;
-                    break;
-                case 2:
-                    dopStr = questionMain[qusestionStrNum];
-                    qusestionStrNum++;
-                    anwerMain = new string[1];
-                    anwerMain[0] = questionMain[qusestionStrNum];
-                    qusestionStrNum++;
-                    createChoiseWindowMain(dopStr, mainQuestionNum);
-               
-                    break;
-                case 3:
-                    anwerMain = new string[1];
-                    anwerMain[0] = questionMain[qusestionStrNum];
-                    qusestionStrNum++;
-                    createChoiseWindowMain("Укажите граф передачи стохастической сети", mainQuestionNum, 4);
-                  
-                    break;
-                case 4:
-                    dopStr = questionMain[qusestionStrNum];
-               
-                    qusestionStrNum++;
-                    anwerMain = new string[0];
-                    for (int i = 0; i < colParametr; i++  )
-                    {
-                        Array.Resize(ref anwerMain, anwerMain.Length + 1);
-                        anwerMain[anwerMain.Length - 1] = questionMain[qusestionStrNum];
-                        qusestionStrNum++;
-                    }
-                    createMainQuestionWindow(dopStr, mainQuestionNum, colParametr, "Лямда");
-                    break;
-                case 5:
-                    dopStr = questionMain[qusestionStrNum];
+        void scenarioLab3(dynamic dopStr) {
 
-                    qusestionStrNum++;
-                    anwerMain = new string[0];
-                    for (int i = 0; i < colParametr; i++)
-                    {
-                        Array.Resize(ref anwerMain, anwerMain.Length + 1);
-                        anwerMain[anwerMain.Length - 1] = questionMain[qusestionStrNum];
-                        qusestionStrNum++;
-                    }
-                    createMainQuestionWindow(dopStr, mainQuestionNum, colParametr, "Альфа");
-                    break;
-                case 6:
-                    dopStr = questionMain[qusestionStrNum];
-                    qusestionStrNum++;
-                    anwerMain = new string[1];
-                    anwerMain[0] = questionMain[qusestionStrNum];
-                    qusestionStrNum++;
-                    createPuttWindowMain(dopStr, mainQuestionNum);
-                    break;
-                case 7:
-                    dopStr = questionMain[qusestionStrNum];
-                    qusestionStrNum++;
-                    anwerMain = new string[1];
-                    anwerMain[0] = questionMain[qusestionStrNum];
-                    qusestionStrNum++;
-                    createPuttFormulasWindowMain(dopStr, mainQuestionNum);
-                    break;
-                case 8:
-                    dopStr = questionMain[qusestionStrNum];
-                    qusestionStrNum++;
-                    anwerMain = new string[0];
-                    for (int i = 0; i < colParametr; i++)
-                    {
-                        Array.Resize(ref anwerMain, anwerMain.Length + 1);
-                        anwerMain[anwerMain.Length - 1] = questionMain[qusestionStrNum];
-                        qusestionStrNum++;
-                    }
-                    createMainQuestionWindow(dopStr, mainQuestionNum, colParametr, "Бэта");
-                    break;
-                case 9:
-                    dopStr = questionMain[qusestionStrNum];
-                   
-                    qusestionStrNum++;
-                    anwerMain = new string[0];
-                    for (int i = 0; i < colParametr; i++)
-                    {
-                        Array.Resize(ref anwerMain, anwerMain.Length + 1);
-                        anwerMain[anwerMain.Length - 1] = questionMain[qusestionStrNum];
-                        qusestionStrNum++;
-                    }
-                    createMainQuestionWindow(dopStr, mainQuestionNum, colParametr, "Пи");
-                    break;
-                case 10:
-                    dopStr = questionMain[qusestionStrNum];
-                  
-                    qusestionStrNum++;
-                    anwerMain = new string[1];
-                    anwerMain[0] = questionMain[qusestionStrNum];
-                    qusestionStrNum++;
-                    createPuttFormulasWindowMain(dopStr, mainQuestionNum);
-                    break;
-                case 11:
-                    dopStr = questionMain[qusestionStrNum];
-                    qusestionStrNum++;
-                    anwerMain = new string[1];
-                    anwerMain[0] = questionMain[qusestionStrNum];
-                    qusestionStrNum++;
-                    createPuttWindowMain(dopStr, mainQuestionNum);
+                string str = dopStr.task_type;
+                switch (str)
+                {
+                    case "mv":
+                        createMainQuestionWindow(dopStr.task_question.ToString(), qusestionStrNum + 1, colParametr, "Лямда");
+                        break;
+                    case "o":
+                        createPuttWindowMain(dopStr.task_question.ToString(), qusestionStrNum + 1);
+                        break;
+                    case "f":
+                        createPuttFormulasWindowMain(dopStr.task_question.ToString(), qusestionStrNum + 1);
+                        break;
+                    default:
+                        break;
+                }
 
-                    break;
-                case 12:
-                    dopStr = questionMain[qusestionStrNum];
-                    qusestionStrNum++;
-                    anwerMain = new string[1];
-                    anwerMain[0] = questionMain[qusestionStrNum];
-                    qusestionStrNum++;
-                    createPuttFormulasWindowMain(dopStr, mainQuestionNum);
 
-                    break;
-                case 13:
-                    dopStr = questionMain[qusestionStrNum];
-                    qusestionStrNum++;
-                    anwerMain = new string[0];
-                    for (int i = 0; i < colParametr; i++)
-                    {
-                        Array.Resize(ref anwerMain, anwerMain.Length + 1);
-                        anwerMain[anwerMain.Length - 1] = questionMain[qusestionStrNum];
-                        qusestionStrNum++;
-                    }
-                    createMainQuestionWindow(dopStr, mainQuestionNum, colParametr, "L");
 
-                    break;
-                case 14:
-                    dopStr = questionMain[qusestionStrNum];
-                    qusestionStrNum++;
-                    anwerMain = new string[1];
-                    anwerMain[0] = questionMain[qusestionStrNum];
-                    qusestionStrNum++;
-                    createPuttFormulasWindowMain(dopStr, mainQuestionNum);
-
-                    break;
-                case 15:
-                    dopStr = questionMain[qusestionStrNum];
-                    qusestionStrNum++;
-                    anwerMain = new string[0];
-                    for (int i = 0; i < colParametr; i++)
-                    {
-                        Array.Resize(ref anwerMain, anwerMain.Length + 1);
-                        anwerMain[anwerMain.Length - 1] = questionMain[qusestionStrNum];
-                        qusestionStrNum++;
-                    }
-                    createMainQuestionWindow(dopStr, mainQuestionNum, colParametr, "m");
-                    break;
-                case 16:
-                    dopStr = questionMain[qusestionStrNum];
-                    qusestionStrNum++;
-                    anwerMain = new string[1];
-                    anwerMain[0] = questionMain[qusestionStrNum];
-                    qusestionStrNum++;
-                    createPuttFormulasWindowMain(dopStr, mainQuestionNum);
-
-                    break;
-                case 17:
-                    dopStr = questionMain[qusestionStrNum];
-                    qusestionStrNum++;
-                    anwerMain = new string[0];
-                    for (int i = 0; i < colParametr; i++)
-                    {
-                        Array.Resize(ref anwerMain, anwerMain.Length + 1);
-                        anwerMain[anwerMain.Length - 1] = questionMain[qusestionStrNum];
-                        qusestionStrNum++;
-                    }
-                    createMainQuestionWindow(dopStr, mainQuestionNum, colParametr, "W");
-
-                    break;
-                case 18:
-                    dopStr = questionMain[qusestionStrNum];
-                    qusestionStrNum++;
-                    anwerMain = new string[1];
-                    anwerMain[0] = questionMain[qusestionStrNum];
-                    qusestionStrNum++;
-                    createPuttFormulasWindowMain(dopStr, mainQuestionNum);
-
-                    break;
-                case 19:
-                    dopStr = questionMain[qusestionStrNum];
-                
-                    qusestionStrNum++;
-                    anwerMain = new string[0];
-                    for (int i = 0; i < colParametr; i++)
-                    {
-                        Array.Resize(ref anwerMain, anwerMain.Length + 1);
-                        anwerMain[anwerMain.Length - 1] = questionMain[qusestionStrNum];
-                        qusestionStrNum++;
-                    }
-                    createMainQuestionWindow(dopStr, mainQuestionNum, colParametr, "U");
-                    break;
-                case 20:
-                    dopStr = questionMain[qusestionStrNum];
-                    qusestionStrNum++;
-                    anwerMain = new string[1];
-                    anwerMain[0] = questionMain[qusestionStrNum];
-                    qusestionStrNum++;
-                    createPuttWindowMain(dopStr, mainQuestionNum);
-
-                    break;
-                case 21:
-                    dopStr = questionMain[qusestionStrNum];
-                   
-                    qusestionStrNum++;
-                    anwerMain = new string[1];
-                    anwerMain[0] = questionMain[qusestionStrNum];
-                    qusestionStrNum++;
-                    createPuttWindowMain(dopStr, mainQuestionNum);
-                    break;
-                case 22:
-                    dopStr = questionMain[qusestionStrNum];
-                    
-                    qusestionStrNum++;
-                    anwerMain = new string[1];
-                    anwerMain[0] = questionMain[qusestionStrNum];
-                    qusestionStrNum++;
-                    createPuttWindowMain(dopStr, mainQuestionNum);
-                    break;
-                case 23:
-                    dopStr = questionMain[qusestionStrNum];
-                  
-                    qusestionStrNum++;
-                    anwerMain = new string[1];
-                    anwerMain[0] = questionMain[qusestionStrNum];
-                    qusestionStrNum++;
-                    createPuttWindowMain(dopStr, mainQuestionNum);
-                    break;
-                default:
-                    MessageBox.Show("Вопросов больше нет!");
-                    break;
-            }
-            mainQuestionNum++;
         }
 
         public string numLab = "3";
@@ -702,6 +488,13 @@ namespace VVK
             //        colParametr = Int32.Parse(questionMain[0]);
             //        scenarioLab6();
             //        break;
+            //}
+            //dynamic array;
+            //using (StreamReader r = new StreamReader("D://test.json"))
+            //{
+            //    string json = r.ReadToEnd();
+            //   array = JsonConvert.DeserializeObject(json);
+
             //}
 
         }
@@ -799,7 +592,7 @@ namespace VVK
             tabControl1.TabPages.Add("Вопрос " + number.ToString());
             tabControl1.TabPages[tabPagesCount].Controls.Add(new PictureBox() { Location = new Point(tabControl1.Width / 2, tabControl1.Height / 2), Name = "pb" });
             tabControl1.TabPages[tabPagesCount].Controls.Add(new TextBox() { ReadOnly = true, Multiline = true, Dock = System.Windows.Forms.DockStyle.Top, Text = answer, Size = new Size(50, 50) });
-            tabControl1.TabPages[tabPagesCount].Controls.Add(new TextBox() { ReadOnly = true, Location = new Point(0, 60), Text = anwerMain[0], Size = new Size(767, 20), Name = "textBox" });
+            tabControl1.TabPages[tabPagesCount].Controls.Add(new TextBox() { ReadOnly = true, Location = new Point(0, 60),  Size = new Size(767, 20), Name = "textBox" });
 
             Button btn1 = new Button() { Location = new Point(330, 300), Size = new Size(100, 40), Name = "btn1", Text = "Ввести формулу" };
             tabControl1.TabPages[tabPagesCount].Controls.Add(btn1);
@@ -824,12 +617,14 @@ namespace VVK
         {
             int tabPagesCount = tabControl1.SelectedIndex;
             TextBox tb = tabControl1.TabPages[tabPagesCount].Controls.Find("textBox", false).First() as TextBox;
-            if (tb.Text == anwerMain[0])
+            if (true)
             {
                 tb.Enabled = false;
                 Button bt = tabControl1.TabPages[tabPagesCount].Controls.Find("bt", false).First() as Button;
                 bt.Enabled = false;
-                scenarioLab7();
+
+                sendingResponseLaba(questionMain[qusestionStrNum].id.ToString(), questionMain[qusestionStrNum].task_answer_id.ToString(), tb.Text);
+
             }
             else MessageBox.Show("Неверно!");
         }
@@ -840,7 +635,7 @@ namespace VVK
             int tabPagesCount = tabControl1.TabPages.Count;
             tabControl1.TabPages.Add("Вопрос " + number.ToString());
             tabControl1.TabPages[tabPagesCount].Controls.Add(new TextBox() { ReadOnly = true, Multiline = true, Dock = System.Windows.Forms.DockStyle.Top, Text = answer, Size = new Size(50, 50) });
-            tabControl1.TabPages[tabPagesCount].Controls.Add(new TextBox() { Location = new Point(0, 60), Text = anwerMain[0], Size = new Size(767, 20), Name = "textBox" });
+            tabControl1.TabPages[tabPagesCount].Controls.Add(new TextBox() { Location = new Point(0, 60), Size = new Size(767, 20), Name = "textBox" });
             Button button = new Button() { Dock = Dock = System.Windows.Forms.DockStyle.Bottom, Text = "Принять", Name = "bt" };
             button.Click += Button_Click3_Main;
             tabControl1.TabPages[tabPagesCount].Controls.Add(button);
@@ -882,14 +677,14 @@ namespace VVK
         {
             int tabPagesCount = tabControl1.SelectedIndex;
             TextBox tb = tabControl1.TabPages[tabPagesCount].Controls.Find("textBox", false).First() as TextBox;
-            if (tb.Text == anwerMain[0])
+            if (true)
             {
                 tb.Enabled = false;
                 Button bt = tabControl1.TabPages[tabPagesCount].Controls.Find("bt", false).First() as Button;
                 bt.Enabled = false;
 
                 if (numLab == "3")
-                    scenarioLab7();
+                    sendingResponseLaba(questionMain[qusestionStrNum].id.ToString(), questionMain[qusestionStrNum].task_answer_id.ToString(), tb.Text);
                 else if (numLab == "6")
                     scenarioLab6();
 
@@ -959,7 +754,7 @@ namespace VVK
             {
                 Button bt = tabControl1.TabPages[tabPagesCount].Controls.Find("bt", false).First() as Button;
                 bt.Enabled = false;
-                scenarioLab7();
+             //   scenarioLab7();
             }
             else MessageBox.Show("Неверно!");
 
@@ -1011,7 +806,7 @@ namespace VVK
             else
                 MessageBox.Show("Схема составлена неверно");
             int tabPagesCount = tabControl1.SelectedIndex;
-            scenarioLab7();
+         //   scenarioLab7();
             Button bt = tabControl1.TabPages[tabPagesCount].Controls.Find("bt", false).First() as Button;
             bt.Enabled = false;
         }
@@ -1019,7 +814,7 @@ namespace VVK
         void createMainQuestionWindow(string answer, int number, int col , string parametr) {
             int tabPagesCount = tabControl1.TabPages.Count;
             tabControl1.TabPages.Add("Вопрос " + number.ToString());
-            tabControl1.TabPages[tabPagesCount].Controls.Add(new TextBox() { ReadOnly = true, Multiline = true, Dock = System.Windows.Forms.DockStyle.Top, Text = answer, Size = new Size(50, 75) });
+            tabControl1.TabPages[tabPagesCount].Controls.Add(new TextBox() { ReadOnly = true, Multiline = true, Dock = System.Windows.Forms.DockStyle.Top, Text =  answer, Size = new Size(50, 120) });
             TextBox[] textBox;
             Label[] label;
             textBox = new TextBox[col];
@@ -1031,9 +826,9 @@ namespace VVK
             {
                 label[i] = new Label();
                 label[i].ClientSize = new Size(300, 25);
-                label[i].Location = new Point(20, 80 + i * 40);
+                label[i].Location = new Point(20, 180 + i * 40);
                 if (numLab == "3")
-                    label[i].Text = $"Рассчитать вероятность простоя {parametr}{i+1} для для S1,S2,...Sn.";
+                    label[i].Text = $"Рассчитать параметр {parametr}{i+1} для для S1,S2,...Sn.";
                 else if (numLab == "6")
                     label[i].Text = lab6Question[i];
                 label[i].Name = "label";
@@ -1041,9 +836,9 @@ namespace VVK
 
                 textBox[i] = new TextBox();
                 textBox[i].ClientSize = new Size(200, 50);
-                textBox[i].Location = new Point(350, 80 + i * 40);
+                textBox[i].Location = new Point(350, 180 + i * 40);
                 textBox[i].Name = "textBox";
-                textBox[i].Text = anwerMain[i];
+               // textBox[i].Text = anwerMain[i];
                 tabControl1.TabPages[tabPagesCount].Controls.Add(textBox[i]);
             }
 
@@ -1060,13 +855,15 @@ namespace VVK
             Control[] con = tabControl1.TabPages[tabPagesCount].Controls.Find("textBox", false);
              int k = 0;
             bool cheack = true;
+            string answer = "";
             foreach (var item in con)
             {
 
                 TextBox tb = item as TextBox;
-                if (tb.Text == anwerMain[k].ToString())
+                if (true)
                 {
-                    tb.Enabled = false;
+                    answer += tb.Text.Trim() + " ";
+                    //tb.Enabled = false;
                 }
                 else cheack = false;
                 k++;
@@ -1075,7 +872,7 @@ namespace VVK
             if (cheack == true)
             {
                 if (numLab == "3")
-                    scenarioLab7();
+                    sendingResponseLaba(questionMain[qusestionStrNum].id.ToString(), questionMain[qusestionStrNum].task_answer_id.ToString(), answer);
                 else if (numLab == "6")
                     scenarioLab6();
 
@@ -1096,7 +893,7 @@ namespace VVK
 
             var content = new FormUrlEncodedContent(values);
 
-            var response = await client.PostAsync("http://localhost:8000/response/", content);
+            var response = await client.PostAsync(url+"/response/", content);
 
             var responseString = await response.Content.ReadAsStringAsync();
 
@@ -1129,7 +926,7 @@ namespace VVK
 
                          content = new FormUrlEncodedContent(values);
 
-                         response = await client.PostAsync("http://localhost:8000/result/", content);
+                         response = await client.PostAsync(url+"/result/", content);
 
                          responseString = await response.Content.ReadAsStringAsync();
 
@@ -1143,6 +940,121 @@ namespace VVK
 
             }
         }
+
+
+        async void sendingResponseLaba(string task_id ,string id_question, string question_response, string cheat = "0")
+        {
+            var values = new Dictionary<string, string>
+                {
+                    { "task_id", task_id },
+                    { "user_task_id", user_id },
+                    { "task_answer_id", id_question },
+                    {"question_response", question_response.Trim() },
+                    {"cheat", cheat },
+                };
+
+            var content = new FormUrlEncodedContent(values);
+
+            var response = await client.PostAsync(url + "/response_task/", content);
+
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            dynamic jsonDe = JsonConvert.DeserializeObject(responseString);
+
+            if ((int)jsonDe.status == 201)
+            {
+                MessageBox.Show(jsonDe.answer.ToString());
+            }
+            else
+            {
+                qusestionStrNum++;
+                if (questionMain.Length >= qusestionStrNum)
+                {
+                    scenarioLab3(questionMain[qusestionStrNum]);
+                }
+                else
+                {
+                    MessageBox.Show("Вопросов больше нет");
+                }
+                int tabPagesCount = tabControl1.SelectedIndex;
+                Button bt = tabControl1.TabPages[tabPagesCount].Controls.Find("bt", false).First() as Button;
+                bt.Enabled = false;
+
+            }
+        }
+
+        public async void startLaba(string lab_num)
+        {
+            var values = new Dictionary<string, string>
+                {
+                    { "user_id", user_id },
+                     { "lab_number", lab_num },
+
+                };
+
+            var content = new FormUrlEncodedContent(values);
+
+
+
+            var response = await client.PostAsync(url + "/start_task/", content);
+
+            var responseString = await response.Content.ReadAsStringAsync();
+
+
+
+            dynamic jsonDe = JsonConvert.DeserializeObject(responseString);
+            questionMain = new dynamic[0];
+
+            foreach (dynamic typeStr in jsonDe.questions)
+            {
+                Array.Resize(ref questionMain, questionMain.Length + 1);
+                questionMain[questionMain.Length - 1] = typeStr.question;
+            }
+
+            colParametr = jsonDe.base_values.count_blocks;
+            string dopStr = "";
+            questionMain[qusestionStrNum].task_question = questionMain[qusestionStrNum].task_question.ToString().Replace("lambda", jsonDe.base_values.lambda.ToString());
+
+            int a = 1;
+            foreach (var p in jsonDe.base_values.P)
+            {
+                dopStr += $"\r\n P[{a}] = " + p;
+                a++;
+            }
+
+            questionMain[qusestionStrNum].task_question = questionMain[qusestionStrNum].task_question.ToString().Replace("[P]", dopStr);
+            a = 1;
+            dopStr = "";
+            foreach (var p in jsonDe.base_values.pr)
+            {
+                dopStr += $"\r\n V[ПР{a}] = " + p;
+                a++;
+            }
+            questionMain[qusestionStrNum].task_question = questionMain[qusestionStrNum].task_question.ToString().Replace("V[ПР]", dopStr);
+            a = 1;
+            dopStr = "";
+            foreach (var p in jsonDe.base_values.mem)
+            {
+                dopStr += $" СК{a} = " + p;
+                a++;
+            }
+
+            questionMain[qusestionStrNum].task_question = questionMain[qusestionStrNum].task_question.ToString().Replace("[СК]", dopStr);
+
+            a = 1;
+            dopStr = "";
+            foreach (var p in jsonDe.base_values.uvv)
+            {
+                dopStr += $" МК{a} = " + p;
+                a++;
+            }
+
+            questionMain[qusestionStrNum].task_question = questionMain[qusestionStrNum].task_question.ToString().Replace("[МК]", dopStr);
+
+
+            scenarioLab3(questionMain[qusestionStrNum]);
+        }
+
 
         void scenarioLab6()
         {
@@ -1173,5 +1085,9 @@ namespace VVK
 
         }
 
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            sendingResponseLaba(questionMain[qusestionStrNum].id.ToString(), questionMain[qusestionStrNum].task_answer_id.ToString(), "", "1");
+        }
     }
 }
